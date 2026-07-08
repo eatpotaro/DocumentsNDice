@@ -14,7 +14,13 @@ public class DiceCreator : NetworkBehaviour
     public Transform playerCam;
     private int modifier;
     private float multiplier;
-    
+
+    void Start()
+    {
+        UpdateDiceMultiplier();
+        UpdateDiceModifier();
+    }
+
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SpawnDiceServerRPC(Vector3 pos, int mod, float mult, int diceType)
     {   
@@ -37,7 +43,7 @@ public class DiceCreator : NetworkBehaviour
             return;
         }
 
-        Vector3 position = playerCam.position + playerCam.forward * 5f;
+        Vector3 position = playerCam.position + playerCam.forward * 15f;
         SpawnDiceServerRPC(position, modifier, multiplier, diceTypeDropdown.value);
     }
     public void UpdateDiceModifier()
@@ -51,10 +57,14 @@ public class DiceCreator : NetworkBehaviour
         catch
         {
             modifier = 0;
+            diceModifierInput.text = modifier.ToString();
             return;
         }
+
         modifier = diceModifierNew;
+        diceModifierInput.text = modifier.ToString();
     }
+    
     public void UpdateDiceMultiplier()
     {
         string diceMultiplierText = diceMultiplierInput.text;
@@ -66,8 +76,11 @@ public class DiceCreator : NetworkBehaviour
         catch
         {
             multiplier = 1;
+            diceMultiplierInput.text = multiplier.ToString();
             return;
         }
+
         multiplier = diceMultiplierNew == 0f ? 1f : diceMultiplierNew;
+        diceMultiplierInput.text = multiplier.ToString();
     }
 }
