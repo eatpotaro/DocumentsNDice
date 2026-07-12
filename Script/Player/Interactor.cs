@@ -7,7 +7,7 @@ public class Interactor : NetworkBehaviour
     public PlayerInput playerInput;
     InputAction interactAction;
     InputAction altInteractAction;
-
+    
     Interactable selected;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
