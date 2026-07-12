@@ -99,4 +99,19 @@ public class CameraController : NetworkBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
     }
+
+    public void SetMouseLockState(bool isLocked)
+    {
+        mouseLocked = !isLocked;
+        if(isLocked)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 }

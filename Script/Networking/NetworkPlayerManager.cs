@@ -12,7 +12,6 @@ public class NetworkPlayerManager : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> PlayerName = new NetworkVariable<FixedString64Bytes>();
     private Transform playerCam;
 
-    public GameObject GeneralUIParent;
     public GameObject ScreenPromptParent;
     public GameObject ShowHideIPParent;
     private bool IPHidden;
@@ -94,13 +93,13 @@ public class NetworkPlayerManager : NetworkBehaviour
     public void InitLeave()
     {
         ScreenPromptParent.SetActive(true);
-        GeneralUIParent.SetActive(false);
+        PlayerUIManager.instance.HideUI();
     }
 
     public void CancelLeave()
     {
         ScreenPromptParent.SetActive(false);
-        GeneralUIParent.SetActive(true);
+        PlayerUIManager.instance.ShowUI();
     }
 
     public void Leave()
