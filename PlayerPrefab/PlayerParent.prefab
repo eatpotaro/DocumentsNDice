@@ -1433,6 +1433,7 @@ MonoBehaviour:
   DocList: {fileID: 7058416382656993180}
   playerCam: {fileID: 6852408459312174587}
   basicDocumentPrefab: {fileID: 2155604143509767340, guid: ce114088095caec4d8c8955c415b90b1, type: 3}
+  whiteboardPrefab: {fileID: 2088107364524416430, guid: 5d0aff92e40752e4db9c4d7c0c522e13, type: 3}
 --- !u!1 &2058032707951855220
 GameObject:
   m_ObjectHideFlags: 0
@@ -4233,6 +4234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e8a12d0a3cfbb47b609965fc777a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUIManager
+  ShowTopMostFoldoutHeaderGroup: 1
   camControl: {fileID: 8436379360313866245}
   GeneralUIParent: {fileID: 8938572124169239878}
 --- !u!1 &5315048022611755224

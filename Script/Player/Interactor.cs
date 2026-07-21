@@ -58,6 +58,6 @@ public class Interactor : NetworkBehaviour
             return;
         }
 
-        selected.OnInteract();
+        selected.AltInteract();
     }
 }

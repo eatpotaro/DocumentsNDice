@@ -191,6 +191,16 @@ public class Dice : Interactable
         rb.AddForce(Vector3.up * 1000f);
         rb.AddTorque(Random.Range(100, 2000f), Random.Range(100, 2000f), Random.Range(100, 2000f));
     }
+    public override void AltInteract()
+    {
+        SendDestroyRPC();
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SendDestroyRPC()
+    {
+        NetworkBehaviour.Destroy(transform.parent.gameObject);
+    }
 
     public void SetDefaults(float multiplier = 1, int modifier = 0)
     {

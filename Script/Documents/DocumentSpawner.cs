@@ -4,12 +4,14 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
+using System.IO;
 
 public class DocumentSpawner : NetworkBehaviour, IPointerEnterHandler
 {
     public TMP_Dropdown DocList;
     public Transform playerCam;
     public BasicDocument basicDocumentPrefab;
+    public Whiteboard whiteboardPrefab;
     public void LoadOptions()
     {
         int lastID = PlayerPrefs.GetInt("lastID", 0);
@@ -17,6 +19,18 @@ public class DocumentSpawner : NetworkBehaviour, IPointerEnterHandler
         for(int i = 1; i <= lastID+1; i++)
         {
             string serializedDoc = PlayerPrefs.GetString($"Document{i}", "-1");
+
+            if(serializedDoc == "-1")
+            {
+                try
+                {                    
+                    serializedDoc = File.ReadAllText(Path.Combine(Application.persistentDataPath, $"Document{i}.png"));
+                }
+                catch
+                {
+                    serializedDoc = "-1";
+                }
+            }
 
             if(serializedDoc == "-1")
             {
@@ -64,10 +78,12 @@ public class DocumentSpawner : NetworkBehaviour, IPointerEnterHandler
                 }
             case "New Basic Document":
                 {
+                    SpawnDoc("B");
                     break;
                 }
             case "New Whiteboard":
                 {
+                    SpawnDoc("W");
                     break;
                 }
             case "New Character Sheet":
@@ -85,7 +101,27 @@ public class DocumentSpawner : NetworkBehaviour, IPointerEnterHandler
         }
 
         Vector3 position = playerCam.position + playerCam.forward * 15f;
-        SpawnDocServerRPC(position, key, PlayerPrefs.GetString($"Document{key}"));
+
+        string docText;
+        try
+        {                    
+            docText = File.ReadAllText(Path.Combine(Application.persistentDataPath, $"Document{key}.png"));
+        }
+        catch
+        {
+            docText = PlayerPrefs.GetString($"Document{key}");
+        }
+        SpawnDocServerRPC(position, key, docText);
+    }
+    void SpawnDoc(string type)
+    {
+        if (!IsOwner) 
+        {
+            return;
+        }
+
+        Vector3 position = playerCam.position + playerCam.forward * 15f;
+        SpawnDocServerRPC(position, 0, type);
     }
     
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -94,34 +130,25 @@ public class DocumentSpawner : NetworkBehaviour, IPointerEnterHandler
         //get the document instance and spawn it
         char docType = serialisedData[0];
         Document newDoc;
-        /*if(docType == 'C')
+        if(docType == 'B')
         {
-            newDoc = Instantiate(basicDocumentPrefab);
+            newDoc = Instantiate(basicDocumentPrefab, pos, quaternion.identity);
         }
         else if(docType == 'W')
         {
-            newDoc = Instantiate(basicDocumentPrefab);
+            newDoc = Instantiate(whiteboardPrefab, pos, quaternion.identity);
         }
         else
-        {*/
+        {
             newDoc = Instantiate(basicDocumentPrefab, pos, quaternion.identity);
-        //}
+        }
 
         newDoc.NetworkObject.Spawn();
-        newDoc.Load(key, serialisedData);
-
-        SendReloadRPC();
-    }
-
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
-    public void SendReloadRPC()
-    {
-        LoadOptions();
+        newDoc.LoadRPC(key, serialisedData);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log(DocumentManager.Docs.Keys.Count);
         LoadOptions();
     }
 }

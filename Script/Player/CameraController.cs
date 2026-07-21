@@ -102,7 +102,7 @@ public class CameraController : NetworkBehaviour
 
     public void SetMouseLockState(bool isLocked)
     {
-        mouseLocked = !isLocked;
+        mouseLocked = isLocked;
         if(isLocked)
         {
             Cursor.visible = false;

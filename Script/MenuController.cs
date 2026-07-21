@@ -18,6 +18,7 @@ public class MenuController : MonoBehaviour
         playerCreator = GetComponent<PlayerCreator>();
         RefreshIP();
         ShowHideIP();
+        Application.targetFrameRate = 300;
     }
 
     public void SetHost()

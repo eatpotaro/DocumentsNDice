@@ -27,6 +27,11 @@ public class Interactable : NetworkBehaviour
     {
         
     }
+    
+    virtual public void AltInteract()
+    {
+        
+    }
 
     virtual public void OnDelete()
     {

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using Unity.Mathematics;
 using UnityEngine;
 
 public static class DocumentManager
@@ -10,7 +12,15 @@ public static class DocumentManager
     {
         foreach((int key, Document doc) in Docs)
         {
-            PlayerPrefs.SetString($"Document{key}", doc.Serialize());
+            string serialisedText = doc.Serialize();
+            if(serialisedText[0] != 'W')
+            {
+                PlayerPrefs.SetString($"Document{key}", doc.Serialize());
+            }
+            else
+            {
+                File.WriteAllText(Path.Combine(Application.persistentDataPath, $"Document{key}.png"), serialisedText);
+            }
             PlayerPrefs.SetInt("lastID", key);
         }
         PlayerPrefs.Save();

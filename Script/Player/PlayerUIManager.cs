@@ -1,22 +1,18 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerUIManager : MonoBehaviour
+public class PlayerUIManager : NetworkBehaviour
 {
     public static PlayerUIManager instance;
     public CameraController camControl;
     
     public GameObject GeneralUIParent;
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
-        if(instance == null)
+        if (IsOwner)
         {
             instance = this;
-        }
-        else
-        {
-            Debug.LogError("Should only be one instance of playerUIManager. deleting");
-            Destroy(this);
         }
     }
     
@@ -30,5 +26,5 @@ public class PlayerUIManager : MonoBehaviour
     {
         GeneralUIParent.SetActive(true);
         camControl.SetMouseLockState(true);
-    }
+    }    
 }
